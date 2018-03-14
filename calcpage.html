@@ -1,0 +1,93 @@
+<html>
+<head>
+    <script src="arith-plugin.js"></script>
+    
+    
+
+    <script type="application/javascript">
+    
+    function onNumClick(c, input, val){
+        c.setStackTop(val);
+        input.value = c.getStackTop();
+    }
+    function displayCalculator(){
+    var c = new Arith();
+    var body = document.getElementsByTagName('body')[0];
+    var table = document.createElement("table");
+    var inputrow = document.createElement("tr");
+    var input = document.createElement("input");
+    input.value = c.getStackTop();
+    inputrow.appendChild(input);
+    table.appendChild(inputrow);
+    var k = 3;
+    var diff = 2;
+    var opNum = 0;
+    for(var i = 3; i>0; i--){
+        var numberRow = document.createElement("tr");
+        for(var j = 3; j>0; j--){
+            button = document.createElement("button");
+            button.setAttribute("id", (i * k - diff));
+            button.innerHTML = i * k - diff;
+            button.addEventListener("click", function(){
+                c.setStackTop(this.innerHTML); 
+                input.value = c.getStackTop();
+            });
+            
+            diff -=1;
+            numberRow.appendChild(button);
+        }
+        b = document.createElement("button");
+        b.innerHTML = Arith.opNames[opNum];
+        b.addEventListener("click", function(){
+            Arith.opList[this.innerHTML].call(c);
+            input.value = c.getStackTop();
+        });
+        
+        numberRow.appendChild(b);
+        opNum = opNum + 1;
+        diff = 2;
+        table.appendChild(numberRow);
+    }
+    lastrow = document.createElement("tr");
+    clear = document.createElement("button");
+    clear.innerHTML = "C";
+    clear.addEventListener("click", function(){
+        c.setStackTop(-1); 
+        input.value = c.getStackTop();
+    });
+        
+    zero = document.createElement("button");
+    zero.innerHTML = "0";
+    //zero.onclick = c.setStackTop(0);
+    zero.addEventListener("click", function(){ 
+        c.setStackTop(0); 
+        input.value = c.getStackTop();}
+    );
+        
+    enter = document.createElement("button");
+    enter.innerHTML = "E"
+    enter.addEventListener("click", function(){ 
+        c.enter(); 
+        input.value = c.getStackTop();}
+    );
+        
+    lastop = document.createElement("button");
+    lastop.innerHTML = Arith.opNames[opNum];
+    lastop.addEventListener("click", function(){
+        Arith.opList[Arith.opNames[opNum]].call(c);
+        input.value = c.getStackTop();
+    }); 
+        
+    lastrow.appendChild(clear);
+    lastrow.appendChild(zero);
+    lastrow.appendChild(enter);
+    lastrow.appendChild(lastop);
+    table.appendChild(lastrow);
+    body.appendChild(table);
+    input.value = c.getStackTop();
+    }
+    
+    </script>
+</head>
+<body onload="displayCalculator()"></body>
+</html>
